@@ -5,6 +5,7 @@ const passport = require('passport');
 // Internal imports
 const User = require('../../models/User');
 const Profile = require('../../models/Profile');
+const Post = require('../../models/Post');
 const validateProfileInput = require('../../validation/profile');
 const validateExperienceInput = require('../../validation/experience');
 const validateEducationInput = require('../../validation/education');
@@ -309,14 +310,6 @@ router.delete(
         return res.status(404).send({ error: 'Education not found!' });
       }
 
-      // Get remove index
-      // const removeIndex = profile.education
-      //   .map((education) => education.id )
-      //   .indexOf(req.params.exp_id);
-
-      // Splice out the array
-      // profile.education.splice(removeIndex, 1);
-
       // Save
       await profile.save();
       res.status(200).send(profile);
@@ -339,6 +332,7 @@ router.delete(
       })
         .then(async () => {
           await Profile.findOneAndDelete({ user: req.user.id });
+          await Post.deleteMany({ user: req.user.id });
         })
         .catch(() => {
           res.status(500).send({ error: 'Can not delete user profile!' });

@@ -94,4 +94,75 @@ router.delete(
   }
 );
 
+// @route    POST api/posts/like/:id
+// @desc     Like post
+// @access   Private
+router.post(
+  '/like/:post_id',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const post = await Post.findById(req.params.post_id);
+
+      if (!post) {
+        return res.status(404).send({ error: 'Post not found' });
+      }
+
+      if (
+        post.likes.filter((like) => like.user.toString() === req.user.id)
+          .length > 0
+      ) {
+        return res.status(400).send({ error: 'You already like this post' });
+      }
+
+      // Add user id to like array
+      post.likes.unshift({ user: req.user.id });
+      await post.save();
+      res.status(200).send(post);
+    } catch (err) {
+      res.status(500).send({ error: 'Post not found' });
+    }
+  }
+);
+
+// @route    POST api/posts/unlike/:id
+// @desc     Unlike post
+// @access   Private
+router.post(
+  '/unlike/:post_id',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const post = await Post.findById(req.params.post_id);
+
+      if (!post) {
+        return res.status(404).send({ error: 'Post not found' });
+      }
+
+      if (
+        post.likes.filter((like) => like.user.toString() === req.user.id)
+          .length === 0
+      ) {
+        return res
+          .status(400)
+          .send({ error: 'You have not yet like this post' });
+      }
+
+      // Get remove index
+      const removeIndex = post.likes
+        .map((item) => item.user.toString())
+        .indexOf(req.user.id);
+
+      // Splice out of array
+      post.likes.splice(removeIndex, 1);
+
+      // Save & return post
+      await post.save();
+      res.status(200).send(post);
+    } catch (err) {
+      res.status(500).send({ error: 'Post not found' });
+    }
+  }
+);
+
 module.exports = router;
