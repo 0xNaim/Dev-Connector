@@ -74,29 +74,44 @@ router.delete(
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
-      Post.findById(req.params.post_id)
-        .then((post) => {
-          // Check the author
-          if (post.user !== req.user.id) {
-            return res
-              .status(401)
-              .send({ error: 'User are not authorized to delete this post' });
-          }
-          // Delete post
-          post
-            .remove()
-            .then(() => {
-              res.status(200).send({ message: 'Post deleted successfully' });
-            })
-            .catch(() => {
-              res.status(500).send({ error: 'Can not delete post' });
-            });
-        })
-        .catch((err) => {
-          res.status(404).send({ error: 'Post not found' });
-        });
+      const post = await Post.findById(req.params.post_id);
+
+      if (post.user.toString() !== req.user.id) {
+        return res
+          .status(401)
+          .send({ error: 'User are not authorized to delete this post' });
+      }
+
+      if (!post) {
+        return res.status(404).send({ error: 'Post not found' });
+      }
+
+      await post.remove();
+      res.status(200).send({ message: 'Post deleted successfully' });
+
+      // Post.findById(req.params.post_id)
+      //   .then((post) => {
+      //     // Check the author
+      //     if (post.user !== req.user.id) {
+      //       return res
+      //         .status(401)
+      //         .send({ error: 'User are not authorized to delete this post' });
+      //     }
+      //     // Delete post
+      //     post
+      //       .remove()
+      //       .then(() => {
+      //         res.status(200).send({ message: 'Post deleted successfully' });
+      //       })
+      //       .catch(() => {
+      //         res.status(500).send({ error: 'Can not delete post' });
+      //       });
+      //   })
+      //   .catch((err) => {
+      //     res.status(404).send({ error: 'Post not found' });
+      //   });
     } catch (err) {
-      res.status(404).send({ error: err.message });
+      res.status(404).send({ error: 'Post not found' });
     }
   }
 );
