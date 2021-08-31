@@ -77,12 +77,11 @@ router.delete(
       Post.findById(req.params.post_id)
         .then((post) => {
           // Check the author
-          if (post.user.toString() !== req.user.id) {
+          if (post.user !== req.user.id) {
             return res
               .status(401)
               .send({ error: 'User are not authorized to delete this post' });
           }
-
           // Delete post
           post
             .remove()
