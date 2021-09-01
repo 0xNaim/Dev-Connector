@@ -224,7 +224,7 @@ router.delete(
           .send({ error: 'Your are not authorized to delete this comment' });
       }
 
-      // Check if comment exists
+      // Check if comment exist
       if (
         post.comments.filter(
           (comment) => comment._id.toString() === req.params.comnt_id
