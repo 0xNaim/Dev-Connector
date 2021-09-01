@@ -5,7 +5,6 @@ const passport = require('passport');
 
 // Internal imports
 const Post = require('../../models/Post');
-const Profile = require('../../models/Profile');
 const validatePostInput = require('../../validation/post');
 
 // @route    POST api/posts
@@ -76,6 +75,7 @@ router.delete(
     try {
       const post = await Post.findById(req.params.post_id);
 
+      // Check the authorization for delete post
       if (post.user.toString() !== req.user.id) {
         return res
           .status(401)
@@ -150,7 +150,7 @@ router.post(
 
       // Get remove index
       const removeIndex = post.likes
-        .map((item) => item.user.toString())
+        .map((like) => like.user.toString())
         .indexOf(req.user.id);
 
       // Splice out of array
@@ -160,7 +160,81 @@ router.post(
       await post.save();
       res.status(200).send(post);
     } catch (err) {
+      res.status(404).send({ error: 'Post not found' });
+    }
+  }
+);
+
+// @route    POST api/posts/comment/:comnt_id
+// @desc     Add comment to post
+// @access   Private
+router.post(
+  '/comment/:comnt_id',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const { errors, isValid } = validatePostInput(req.body);
+
+    try {
+      // Check validation
+      if (!isValid) {
+        return res.status(400).send(errors);
+      }
+
+      const post = await Post.findById(req.params.comnt_id);
+
+      if (!post) res.status(404).send({ error: 'Post not found' });
+
+      const newComment = {
+        text: req.body.text,
+        name: req.body.name,
+        avatar: req.body.avatar,
+        user: req.user.id,
+      };
+
+      // Add to comments array
+      post.comments.unshift(newComment);
+
+      // Save & return post
+      await post.save();
+      res.status(200).send(post);
+    } catch (err) {
       res.status(500).send({ error: 'Post not found' });
+    }
+  }
+);
+
+// @route    Delete api/posts/comment/:post_id/:comnt_id
+// @desc     Remove comment from post
+// @access   Private
+router.delete(
+  '/comment/:post_id/:comnt_id',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const post = await Post.findById(req.params.post_id);
+
+      // Check if comment exists
+      if (
+        post.comments.filter(
+          (comment) => comment._id.toString() === req.params.comnt_id
+        ).length === 0
+      ) {
+        return res.status(404).send({ error: 'Comment does not exist' });
+      }
+
+      // Get remove index
+      const removeIndex = post.comments
+        .map((comment) => comment._id.toString())
+        .indexOf(req.params.comnt_id);
+
+      // Splice comment out of array
+      post.comments.splice(removeIndex, 1);
+
+      // Save & return post
+      await post.save();
+      res.status(200).send(post);
+    } catch (err) {
+      res.status(404).send({ error: 'Comment does not exist' });
     }
   }
 );
