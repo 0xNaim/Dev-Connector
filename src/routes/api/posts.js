@@ -213,6 +213,17 @@ router.delete(
     try {
       const post = await Post.findById(req.params.post_id);
 
+      // Check the authorization for delete comment
+      const singleComment = post.comments.filter(
+        (comment) => comment._id.toString() === req.params.comnt_id
+      );
+
+      if (singleComment[0].user.toString() !== req.user.id) {
+        return res
+          .status(401)
+          .send({ error: 'Your are not authorized to delete this comment' });
+      }
+
       // Check if comment exists
       if (
         post.comments.filter(
