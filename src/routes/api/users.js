@@ -11,7 +11,7 @@ const User = require('../../models/User');
 const validateRegisterInput = require('../../validation/register');
 const validateLoginInput = require('../../validation/login');
 
-// @route    GET api/users/register
+// @route    POST api/users/register
 // @desc     Register user
 // @access   Public
 router.post('/register', async (req, res) => {
@@ -55,7 +55,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// @route    GET api/users/login
+// @route    POST api/users/login
 // @desc     Login user / retuning jwt token
 // @access   Public
 router.post('/login', async (req, res) => {
