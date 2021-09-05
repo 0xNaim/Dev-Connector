@@ -48,9 +48,9 @@ router.post(
     profileFields.social = {};
     if (req.body.facebook) profileFields.social.facebook = req.body.facebook;
     if (req.body.youtube) profileFields.social.youtube = req.body.youtube;
+    if (req.body.instagram) profileFields.social.instagram = req.body.instagram;
     if (req.body.twitter) profileFields.social.twitter = req.body.twitter;
     if (req.body.linkedin) profileFields.social.linkedin = req.body.linkedin;
-    if (req.body.instagram) profileFields.social.instagram = req.body.instagram;
 
     try {
       const profile = await Profile.findOne({ user: req.user.id });
@@ -61,7 +61,8 @@ router.post(
           { $set: profileFields },
           { new: true }
         );
-        res.status(200).send(updatedProfile);
+        
+        res.status(200).json(updatedProfile);
       } else {
         // Create
 
@@ -74,7 +75,7 @@ router.post(
 
         // Save profile
         const newProfile = await new Profile(profileFields).save();
-        res.status(200).send(newProfile);
+        res.status(200).json(newProfile);
       }
     } catch (err) {
       res.status(500).send({ error: err.message });

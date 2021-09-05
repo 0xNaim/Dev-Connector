@@ -11,7 +11,7 @@ const User = require('../../models/User');
 const validateRegisterInput = require('../../validation/register');
 const validateLoginInput = require('../../validation/login');
 
-// @route    GET api/users/register
+// @route    POST api/users/register
 // @desc     Register user
 // @access   Public
 router.post('/register', async (req, res) => {
@@ -25,14 +25,14 @@ router.post('/register', async (req, res) => {
   try {
     // Check validation
     if (!isValid) {
-      return res.status(400).send(errors);
+      return res.status(400).json(errors);
     }
 
     const user = await User.findOne({ email: req.body.email });
 
     if (user) {
       errors.email = 'Email already exists!';
-      return res.status(400).send({ errors });
+      return res.status(400).json(errors);
     }
 
     const newUser = await new User({
@@ -47,7 +47,11 @@ router.post('/register', async (req, res) => {
         if (err) throw err;
         newUser.password = hash;
         await newUser.save();
-        res.status(201).send(newUser);
+        res.status(201).send({
+          name: req.body.name,
+          email: req.body.email,
+          avatar,
+        });
       });
     });
   } catch (err) {
@@ -55,7 +59,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// @route    GET api/users/login
+// @route    POST api/users/login
 // @desc     Login user / retuning jwt token
 // @access   Public
 router.post('/login', async (req, res) => {
@@ -67,7 +71,7 @@ router.post('/login', async (req, res) => {
   try {
     // Check validation
     if (!isValid) {
-      return res.status(400).send(errors);
+      return res.status(400).json(errors);
     }
 
     // Find user by email
@@ -75,8 +79,8 @@ router.post('/login', async (req, res) => {
 
     // Check for user
     if (!user) {
-      errors.email = 'Unable to login';
-      return res.status(401).send({ errors });
+      errors.email = 'Username or password is incorrect';
+      return res.status(401).json(errors);
     }
 
     // Check password
@@ -84,7 +88,7 @@ router.post('/login', async (req, res) => {
 
     if (!passIsMatch) {
       errors.password = 'Password incorrect';
-      return res.status(400).send(errors);
+      return res.status(400).json(errors);
     }
 
     // Create jwt payload

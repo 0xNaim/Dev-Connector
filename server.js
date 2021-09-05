@@ -2,6 +2,7 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const passport = require('passport');
 
 // Internal modules
@@ -16,6 +17,7 @@ const app = express();
 // Body parser middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cors());
 
 // Port
 const PORT = process.env.PORT || 4000;
@@ -25,6 +27,11 @@ app.use(passport.initialize());
 
 // Passport config
 require('./src/passport/auth')(passport);
+
+// Root route
+app.get('/', (req, res) => {
+  res.status(200).send('Hello, Express!');
+});
 
 // Use routes
 app.use('/api/users', users);
