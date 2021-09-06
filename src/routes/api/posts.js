@@ -50,12 +50,12 @@ router.get('/', async (req, res) => {
   }
 });
 
-// @route    GET api/posts/:post_id
+// @route    GET api/posts/:id
 // @desc     Get single post
 // @access   Public
-router.get('/:post_id', async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
-    const post = await Post.findById({ _id: req.params.post_id });
+    const post = await Post.findById({ _id: req.params.id });
     if (!post) {
       return res.status(404).send({ error: 'Post not found' });
     }
@@ -65,15 +65,15 @@ router.get('/:post_id', async (req, res) => {
   }
 });
 
-// @route    DELETE api/posts/:post_id
+// @route    DELETE api/posts/:id
 // @desc     Delete post by id
 // @access   Private
 router.delete(
-  '/:post_id',
+  '/:id',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
-      const post = await Post.findById(req.params.post_id);
+      const post = await Post.findById(req.params.id);
 
       // Check the authorization for delete post
       if (post.user.toString() !== req.user.id) {
@@ -94,15 +94,15 @@ router.delete(
   }
 );
 
-// @route    POST api/posts/like/:id
+// @route    POST api/posts/like/id
 // @desc     Like post
 // @access   Private
 router.post(
-  '/like/:post_id',
+  '/like/:id',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
-      const post = await Post.findById(req.params.post_id);
+      const post = await Post.findById(req.params.id);
 
       if (!post) {
         return res.status(404).send({ error: 'Post not found' });
@@ -129,11 +129,11 @@ router.post(
 // @desc     Unlike post
 // @access   Private
 router.post(
-  '/unlike/:post_id',
+  '/unlike/:id',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
-      const post = await Post.findById(req.params.post_id);
+      const post = await Post.findById(req.params.id);
 
       if (!post) {
         return res.status(404).send({ error: 'Post not found' });
@@ -165,11 +165,11 @@ router.post(
   }
 );
 
-// @route    POST api/posts/comment/:comnt_id
+// @route    POST api/posts/comment/:id
 // @desc     Add comment to post
 // @access   Private
 router.post(
-  '/comment/:comnt_id',
+  '/comment/:id',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     const { errors, isValid } = validatePostInput(req.body);
@@ -180,7 +180,7 @@ router.post(
         return res.status(400).send(errors);
       }
 
-      const post = await Post.findById(req.params.comnt_id);
+      const post = await Post.findById(req.params.id);
 
       if (!post) res.status(404).send({ error: 'Post not found' });
 
@@ -203,19 +203,19 @@ router.post(
   }
 );
 
-// @route    Delete api/posts/comment/:post_id/:comnt_id
+// @route    Delete api/posts/comment/:id/:id
 // @desc     Remove comment from post
 // @access   Private
 router.delete(
-  '/comment/:post_id/:comnt_id',
+  '/comment/:id/:id',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
-      const post = await Post.findById(req.params.post_id);
+      const post = await Post.findById(req.params.id);
 
       // Check the authorization for delete comment
       const singleComment = post.comments.filter(
-        (comment) => comment._id.toString() === req.params.comnt_id
+        (comment) => comment._id.toString() === req.params.id
       );
 
       if (singleComment[0].user.toString() !== req.user.id) {

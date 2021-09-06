@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { createProfile } from '../../actions/profileAction';
 import InputGroup from '../common/InputGroup';
 import SelectListGroup from '../common/SelectListGroup';
@@ -54,14 +54,12 @@ const CreateProfile = ({ createProfile, errors, history }) => {
       linkedin: formData.linkedin,
     };
 
-    // Reduc action
+    // Redux action
     createProfile(profileData, history);
   };
 
   useEffect(() => {
-    if (errors) {
-      setError(errors);
-    }
+    setError(errors);
   }, [errors]);
 
   const handleToggle = () => {
@@ -133,14 +131,17 @@ const CreateProfile = ({ createProfile, errors, history }) => {
       <div className='container'>
         <div className='row'>
           <div className='col-md-8 m-auto'>
+            <Link to='/dashboard' className='btn btn-light'>
+              &#8592; Go Back
+            </Link>
             <h1 className='display-4 text-center'>Create your profile</h1>
             <p className='lead text-center'>
               Let's get some information to make your profile stand out
             </p>
             <small className='d-block pb-3'>* = required fields</small>
-            <form onSubmit={handleSubmit}>
+            <form>
               <TextFieldGroup
-                placeholder='* Your name'
+                placeholder='* Your Name'
                 name='handle'
                 value={formData.handle}
                 onChange={handleChange}
@@ -165,7 +166,7 @@ const CreateProfile = ({ createProfile, errors, history }) => {
                 info='Please add comama seperated values (eg. HTML,CSS,JavaScript)'
               />
               <TextFieldGroup
-                placeholder='Company'
+                placeholder='Company Name'
                 name='company'
                 value={formData.company}
                 onChange={handleChange}
@@ -217,12 +218,14 @@ const CreateProfile = ({ createProfile, errors, history }) => {
                 <span className='text-muted'>Optional</span>
               </div>
               {socialInputs}
-              <input
-                type='submit'
-                value='Submit'
-                className='btn btn-info btn-block mt-4'
-              />
             </form>
+            <button
+              type='button'
+              className='btn btn-info mt-3 form-control'
+              onClick={handleSubmit}
+            >
+              Submit
+            </button>
           </div>
         </div>
       </div>

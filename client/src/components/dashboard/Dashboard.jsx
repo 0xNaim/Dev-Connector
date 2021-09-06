@@ -4,7 +4,10 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { deleteAccount, getCurrentProfile } from '../../actions/profileAction';
 import Spinner from '../common/Spinner';
+import Education from './Education';
+import Experience from './Experience';
 import ProfileActions from './ProfileActions';
+
 
 const Dashboard = ({ getCurrentProfile, deleteAccount, auth, profile }) => {
   useEffect(() => {
@@ -29,13 +32,15 @@ const Dashboard = ({ getCurrentProfile, deleteAccount, auth, profile }) => {
             Welcome{' '}
             <Link
               to={`/profile/${profile.profile.handle}`}
-              className='text-decoration-none font-weight-bolder'
+              className='text-decoration-none'
             >
               {auth.user.name}
             </Link>
           </p>
           <ProfileActions />
-          {/* TODO: exp and edu */}
+          <Experience experience={profile.profile.experience} />
+          <hr />
+          <Education education={profile.profile.education} />
           <div style={{ marginBottom: '60px' }} />
           <button
             type='button'

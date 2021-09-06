@@ -131,14 +131,14 @@ router.get('/handle/:handle', async (req, res) => {
   }
 });
 
-// @route    GET api/user/:user_id
+// @route    GET api/user/:id
 // @desc     Get profile by user ID
 // @access   Public
-router.get('/user/:user_id', async (req, res) => {
+router.get('/user/:id', async (req, res) => {
   const errors = {};
   try {
     const profile = await Profile.findOne({
-      user: req.params.user_id,
+      user: req.params.id,
     }).populate('user', ['name', 'avatar']);
 
     if (!profile) {
@@ -258,18 +258,18 @@ router.post(
   }
 );
 
-// @route    DELETE api/profile/experience/exp_id
+// @route    DELETE api/profile/experience/id
 // @desc     Delete experience from profile
 // @access   Private
 router.delete(
-  '/experience/:exp_id',
+  '/experience/:id',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
       const profile = await Profile.findOne({ user: req.user.id });
 
       const newExperience = await profile.experience.pull({
-        _id: req.params.exp_id,
+        _id: req.params.id,
       });
 
       if (!newExperience) {
@@ -293,18 +293,18 @@ router.delete(
   }
 );
 
-// @route    DELETE api/profile/education/edu_id
+// @route    DELETE api/profile/education/id
 // @desc     Delete education from profile
 // @access   Private
 router.delete(
-  '/education/:edu_id',
+  '/education/:id',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
       const profile = await Profile.findOne({ user: req.user.id });
 
       const newEducation = await profile.education.pull({
-        _id: req.params.edu_id,
+        _id: req.params.id,
       });
 
       if (!newEducation) {

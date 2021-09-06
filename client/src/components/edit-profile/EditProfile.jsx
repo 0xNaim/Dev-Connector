@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { createProfile, getCurrentProfile } from '../../actions/profileAction';
 import isEmpty from '../../validation/isEmpty';
 import InputGroup from '../common/InputGroup';
@@ -206,11 +206,14 @@ const EditProfile = ({
       <div className='container'>
         <div className='row'>
           <div className='col-md-8 m-auto'>
+            <Link to='/dashboard' className='btn btn-light'>
+              &#8592; Go Back
+            </Link>
             <h1 className='display-4 text-center'>Update profile</h1>
             <small className='d-block pb-3'>* = required fields</small>
-            <form onSubmit={handleSubmit}>
+            <form>
               <TextFieldGroup
-                placeholder='* Your name'
+                placeholder='* Your Name'
                 name='handle'
                 value={formData.handle}
                 onChange={handleChange}
@@ -235,7 +238,7 @@ const EditProfile = ({
                 info='Please add comama seperated values (eg. HTML,CSS,JavaScript)'
               />
               <TextFieldGroup
-                placeholder='Company'
+                placeholder='Company Name'
                 name='company'
                 value={formData.company}
                 onChange={handleChange}
@@ -287,12 +290,14 @@ const EditProfile = ({
                 <span className='text-muted'>Optional</span>
               </div>
               {socialInputs}
-              <input
-                type='submit'
-                value='Submit'
-                className='btn btn-info btn-block mt-4'
-              />
             </form>
+            <button
+              type='button'
+              className='btn btn-info mt-3 form-control'
+              onClick={handleSubmit}
+            >
+              Submit
+            </button>
           </div>
         </div>
       </div>
