@@ -3,7 +3,7 @@ import jwt_decode from 'jwt-decode';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { logoutUser, setCurrentUser } from './actions/authActions';
-import { clearCurrentProfile } from './actions/profileAction';
+import { clearCurrentProfile } from './actions/profileActions';
 // Internal imports
 import './App.css';
 import AddEducation from './components/add-credentials/AddEducation';
@@ -17,6 +17,8 @@ import EditProfile from './components/edit-profile/EditProfile';
 import Footer from './components/layout/Footer';
 import Landing from './components/layout/Landing';
 import Navbar from './components/layout/Navbar';
+import Profile from './components/profile/Profile';
+import Profiles from './components/profiles/Profiles';
 import store from './store';
 import setAuthToken from './utils/setAuthToken';
 
@@ -50,6 +52,8 @@ function App() {
         <div className='container'>
           <Route exact path='/register' component={Register} />
           <Route exact path='/login' component={Login} />
+          <Route exact path='/profiles' component={Profiles} />
+          <Route exact path='/profile/:handle' component={Profile} />
           <Switch>
             <PrivateRoute exact path='/dashboard' component={Dashboard} />
           </Switch>

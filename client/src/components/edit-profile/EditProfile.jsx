@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import { createProfile, getCurrentProfile } from '../../actions/profileAction';
+import { createProfile, getCurrentProfile } from '../../actions/profileActions';
 import isEmpty from '../../validation/isEmpty';
 import InputGroup from '../common/InputGroup';
 import SelectListGroup from '../common/SelectListGroup';
@@ -78,7 +78,7 @@ const EditProfile = ({
       const updateProfile = profile.profile;
 
       // Bring skills array back to Comma Saperate Value
-      // const skillsCSV = updateProfile.skills.join(',');
+      const skillsCSV = updateProfile.skills.join(',');
 
       // If profile field doesn't exist, make empty string
       updateProfile.company = !isEmpty(updateProfile.company)
@@ -119,21 +119,21 @@ const EditProfile = ({
         : '';
 
       // Set component fields state
-      // setFormData({
-      //   handle: updateProfile.handle,
-      //   company: updateProfile.company,
-      //   website: updateProfile.website,
-      //   location: updateProfile.location,
-      //   status: updateProfile.status,
-      //   skills: updateProfile.skills,
-      //   githubUsername: updateProfile.githubUsername,
-      //   bio: updateProfile.bio,
-      //   facebook: updateProfile.facebook,
-      //   youtube: updateProfile.youtube,
-      //   instagram: updateProfile.instagram,
-      //   twitter: updateProfile.twitter,
-      //   linkedin: updateProfile.linkedin,
-      // });
+      setFormData({
+        handle: updateProfile.handle,
+        company: updateProfile.company,
+        website: updateProfile.website,
+        location: updateProfile.location,
+        status: updateProfile.status,
+        skills: skillsCSV,
+        githubUsername: updateProfile.githubUsername,
+        bio: updateProfile.bio,
+        facebook: updateProfile.facebook,
+        youtube: updateProfile.youtube,
+        instagram: updateProfile.instagram,
+        twitter: updateProfile.twitter,
+        linkedin: updateProfile.linkedin,
+      });
     }
   }, [errors, profile]);
 

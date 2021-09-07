@@ -2,7 +2,7 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { deleteEducation } from '../../actions/profileAction';
+import { deleteEducation } from '../../actions/profileActions';
 
 const Education = ({ education, deleteEducation }) => {
   const handleDelete = (id) => {

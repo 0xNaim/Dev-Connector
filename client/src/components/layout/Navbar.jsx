@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { logoutUser } from '../../actions/authActions';
-import { clearCurrentProfile } from '../../actions/profileAction';
+import { clearCurrentProfile } from '../../actions/profileActions';
 
 const Navbar = ({ auth, logoutUser, clearCurrentProfile }) => {
   const handleLogout = (e) => {
