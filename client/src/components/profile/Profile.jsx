@@ -16,10 +16,8 @@ const Profile = ({ getProfileByHandle, profile, match }) => {
     }
   }, [getProfileByHandle, match.params.handle]);
 
-  const { singleProfile, loading } = profile;
   let profileContent;
-
-  if (singleProfile === null || loading) {
+  if (profile.profile === null || profile.loading) {
     profileContent = <Spinner />;
   } else {
     profileContent = (
@@ -33,9 +31,15 @@ const Profile = ({ getProfileByHandle, profile, match }) => {
           <div className='col-md-6' />
         </div>
         <ProfileHeader singleProfile={profile} />
-        <ProfileAbout />
-        <ProfileCreds />
-        <ProfileGithub />
+        <ProfileAbout singleProfile={profile} />
+        <ProfileCreds singleProfile={profile} />
+        {profile.profile.githubUsername && (
+          <ProfileGithub
+            githubUsername={
+              profile.profile.githubUsername && profile.profile.githubUsername
+            }
+          />
+        )}
       </div>
     );
   }
