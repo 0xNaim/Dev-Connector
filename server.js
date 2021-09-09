@@ -29,11 +29,6 @@ app.use(passport.initialize());
 // Passport config
 require('./src/passport/auth')(passport);
 
-// Root route
-app.get('/', (req, res) => {
-  res.status(200).send('Hello, Express!');
-});
-
 // Use routes
 app.use('/api/users', users);
 app.use('/api/profile', profile);
