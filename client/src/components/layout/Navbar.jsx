@@ -18,7 +18,7 @@ const Navbar = ({ auth, profile, logoutUser, clearCurrentProfile }) => {
     <ul className='navbar-nav ms-auto'>
       <li className='nav-item me-2'>
         <Link className='nav-link' to='/feed'>
-          Fost Feed
+          Post Feed
         </Link>
       </li>
       <li className='nav-item me-2'>

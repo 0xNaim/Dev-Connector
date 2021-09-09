@@ -1,5 +1,11 @@
 import axios from 'axios';
-import { ADD_POST, GET_ERRORS, GET_POSTS, POST_LOADING } from './types';
+import {
+  ADD_POST,
+  DELETE_POST,
+  GET_ERRORS,
+  GET_POSTS,
+  POST_LOADING,
+} from './types';
 
 // Add post
 const addPost = (postData) => (dispatch) => {
@@ -38,6 +44,51 @@ const getPosts = () => (dispatch) => {
     );
 };
 
+// Delete post
+const deletePost = (id) => (dispatch) => {
+  dispatch(setPostLoading());
+  axios
+    .delete(`/api/posts/${id}`)
+    .then((res) =>
+      dispatch({
+        type: DELETE_POST,
+        payload: id,
+      })
+    )
+    .catch((err) =>
+      dispatch({
+        type: GET_POSTS,
+        payload: null,
+      })
+    );
+};
+
+// Add like
+const addLike = (id) => (dispatch) => {
+  axios
+    .post(`/api/posts/like/${id}`)
+    .then((res) => dispatch(getPosts()))
+    .catch((err) =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      })
+    );
+};
+
+// Remove like
+const removeLike = (id) => (dispatch) => {
+  axios
+    .post(`/api/posts/unlike/${id}`)
+    .then((res) => dispatch(getPosts()))
+    .catch((err) =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      })
+    );
+};
+
 // Set loading state
 const setPostLoading = () => {
   return {
@@ -45,4 +96,4 @@ const setPostLoading = () => {
   };
 };
 
-export { addPost, getPosts, setPostLoading };
+export { addPost, getPosts, addLike, removeLike, deletePost, setPostLoading };
