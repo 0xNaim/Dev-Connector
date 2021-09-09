@@ -2,6 +2,9 @@ import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
+import ParticleBackground from '../particle-background/ParticleBackground';
+
+
 
 const Landing = ({ auth, history }) => {
   useEffect(() => {
@@ -12,6 +15,7 @@ const Landing = ({ auth, history }) => {
 
   return (
     <div className='landing'>
+      <ParticleBackground />
       <div className='dark-overlay landing-inner text-light'>
         <div className='container'>
           <div className='row'>
