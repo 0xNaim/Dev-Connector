@@ -15,11 +15,10 @@ const Posts = ({ getPosts, post }) => {
   let postContent;
 
   if (posts === null || loading) {
-    postContent = <Spinner />
+    postContent = <Spinner />;
   } else {
-    postContent = <PostFeed posts={posts} />
+    postContent = <PostFeed posts={posts} />;
   }
-
 
   return (
     <div className='feed'>

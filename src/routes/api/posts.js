@@ -203,19 +203,19 @@ router.post(
   }
 );
 
-// @route    Delete api/posts/comment/:id/:id
+// @route    Delete api/posts/comment/:postId/:comntId
 // @desc     Remove comment from post
 // @access   Private
 router.delete(
-  '/comment/:id/:id',
+  '/comment/:postId/:comntId',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try {
-      const post = await Post.findById(req.params.id);
+      const post = await Post.findById(req.params.postId);
 
       // Check the authorization for delete comment
       const singleComment = post.comments.filter(
-        (comment) => comment._id.toString() === req.params.id
+        (comment) => comment._id.toString() === req.params.comntId
       );
 
       if (singleComment[0].user.toString() !== req.user.id) {
@@ -227,7 +227,7 @@ router.delete(
       // Check if comment exist
       if (
         post.comments.filter(
-          (comment) => comment._id.toString() === req.params.comnt_id
+          (comment) => comment._id.toString() === req.params.comntId
         ).length === 0
       ) {
         return res.status(404).send({ error: 'Comment does not exist' });
@@ -236,7 +236,7 @@ router.delete(
       // Get remove index
       const removeIndex = post.comments
         .map((comment) => comment._id.toString())
-        .indexOf(req.params.comnt_id);
+        .indexOf(req.params.comntId);
 
       // Splice comment out of array
       post.comments.splice(removeIndex, 1);
@@ -245,7 +245,7 @@ router.delete(
       await post.save();
       res.status(200).send(post);
     } catch (err) {
-      res.status(404).send({ error: 'Comment does not exist' });
+      res.status(404).send({ error: err.message });
     }
   }
 );

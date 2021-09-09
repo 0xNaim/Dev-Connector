@@ -1,26 +1,24 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { addPost } from '../../actions/postActions';
+import { addComment } from '../../actions/postActions';
 import TextAreaFieldGroup from '../common/TextAreaFieldGroup';
 
-const PostForm = ({ auth, addPost, errors }) => {
+const CommentForm = ({ auth, addComment, postId, errors }) => {
   const [text, setText] = useState('');
   const [error, setError] = useState({});
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const { user } = auth;
-
-    const newPost = {
+    const newComment = {
       text,
-      name: user.name,
-      avatar: user.avatar,
+      name: auth.user.name,
+      avatar: auth.user.avatar,
     };
 
     // Redux action
-    addPost(newPost);
+    addComment(postId, newComment);
     // Clear state
     setText('');
   };
@@ -32,12 +30,12 @@ const PostForm = ({ auth, addPost, errors }) => {
   return (
     <div className='post-form mb-3'>
       <div className='card card-info'>
-        <div className='card-header bg-info text-white'>Say Something...</div>
+        <div className='card-header bg-info text-white'>Make a comment...</div>
         <div className='card-body'>
           <form>
             <div className='form-group'>
               <TextAreaFieldGroup
-                placeholder='Create a post'
+                placeholder='Reply to post'
                 name='text'
                 value={text}
                 onChange={(e) => setText(e.target.value)}
@@ -58,8 +56,9 @@ const PostForm = ({ auth, addPost, errors }) => {
   );
 };
 
-PostForm.propTypes = {
-  addPost: PropTypes.func.isRequired,
+CommentForm.propTypes = {
+  addComment: PropTypes.func.isRequired,
+  postId: PropTypes.string.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
 };
@@ -69,4 +68,4 @@ const mapStateToProps = (state) => ({
   errors: state.errors,
 });
 
-export default connect(mapStateToProps, { addPost })(PostForm);
+export default connect(mapStateToProps, { addComment })(CommentForm);

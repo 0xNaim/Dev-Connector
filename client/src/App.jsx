@@ -17,6 +17,7 @@ import EditProfile from './components/edit-profile/EditProfile';
 import Footer from './components/layout/Footer';
 import Landing from './components/layout/Landing';
 import Navbar from './components/layout/Navbar';
+import Post from './components/post/Post';
 import Posts from './components/posts/Posts';
 import Profile from './components/profile/Profile';
 import Profiles from './components/profiles/Profiles';
@@ -84,6 +85,9 @@ function App() {
           </Switch>
           <Switch>
             <PrivateRoute exact path='/feed' component={Posts} />
+          </Switch>
+          <Switch>
+            <PrivateRoute exact path='/post/:id' component={Post} />
           </Switch>
         </div>
         <Footer />

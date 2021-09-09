@@ -4,7 +4,14 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { addLike, deletePost, removeLike } from '../../actions/postActions';
 
-const PostItem = ({ post, auth, addLike, removeLike, deletePost }) => {
+const PostItem = ({
+  post,
+  auth,
+  addLike,
+  removeLike,
+  deletePost,
+  showActions,
+}) => {
   const handleDelete = (id) => {
     // Redux action
     deletePost(id);
@@ -44,43 +51,51 @@ const PostItem = ({ post, auth, addLike, removeLike, deletePost }) => {
         </div>
         <div className='col-md-10'>
           <p className='lead'>{post.text}</p>
-          <button
-            onClick={() => handleLike(post._id)}
-            type='button'
-            className='btn btn-light mr-1'
-          >
-            <i
-              className={
-                findUserLike(post.likes)
-                  ? 'text-info fas fa-thumbs-up'
-                  : 'fas fa-thumbs-up'
-              }
-            ></i>
-            <span className='badge alert-light'>{post.likes.length}</span>
-          </button>
-          <button
-            onClick={() => handleUnlike(post._id)}
-            type='button'
-            className='btn btn-light mr-1'
-          >
-            <i className='text-secondary fas fa-thumbs-down'></i>
-          </button>
-          <Link to={`/post/${post._id}`} className='btn btn-info ms-1'>
-            Comments
-          </Link>
-          {post.user === auth.user.id ? (
-            <button
-              onClick={() => handleDelete(post._id)}
-              type='button'
-              className='btn btn-danger ms-1'
-            >
-              <i className='fas fa-times' />
-            </button>
+          {showActions ? (
+            <span>
+              <button
+                onClick={() => handleLike(post._id)}
+                type='button'
+                className='btn btn-light mr-1'
+              >
+                <i
+                  className={
+                    findUserLike(post.likes)
+                      ? 'text-info fas fa-thumbs-up'
+                      : 'fas fa-thumbs-up'
+                  }
+                ></i>
+                <span className='badge alert-light'>{post.likes.length}</span>
+              </button>
+              <button
+                onClick={() => handleUnlike(post._id)}
+                type='button'
+                className='btn btn-light mr-1'
+              >
+                <i className='text-secondary fas fa-thumbs-down'></i>
+              </button>
+              <Link to={`/post/${post._id}`} className='btn btn-info ms-1'>
+                Comments
+              </Link>
+              {post.user === auth.user.id ? (
+                <button
+                  onClick={() => handleDelete(post._id)}
+                  type='button'
+                  className='btn btn-danger ms-1'
+                >
+                  <i className='fas fa-times' />
+                </button>
+              ) : null}
+            </span>
           ) : null}
         </div>
       </div>
     </div>
   );
+};
+
+PostItem.defaultProps = {
+  showActions: true,
 };
 
 PostItem.propTypes = {

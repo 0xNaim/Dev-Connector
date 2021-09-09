@@ -1,14 +1,17 @@
 import axios from 'axios';
 import {
   ADD_POST,
+  CLEAR_ERRORS,
   DELETE_POST,
   GET_ERRORS,
+  GET_POST,
   GET_POSTS,
   POST_LOADING,
 } from './types';
 
 // Add post
 const addPost = (postData) => (dispatch) => {
+  dispatch(clearErrors());
   axios
     .post('/api/posts', postData)
     .then((res) =>
@@ -25,7 +28,7 @@ const addPost = (postData) => (dispatch) => {
     );
 };
 
-// Get post
+// Get posts
 const getPosts = () => (dispatch) => {
   dispatch(setPostLoading());
   axios
@@ -39,6 +42,25 @@ const getPosts = () => (dispatch) => {
     .catch((err) =>
       dispatch({
         type: GET_POSTS,
+        payload: null,
+      })
+    );
+};
+
+// Get single post
+const getPost = (id) => (dispatch) => {
+  dispatch(setPostLoading());
+  axios
+    .get(`/api/posts/${id}`)
+    .then((res) =>
+      dispatch({
+        type: GET_POST,
+        payload: res.data,
+      })
+    )
+    .catch((err) =>
+      dispatch({
+        type: GET_POST,
         payload: null,
       })
     );
@@ -89,6 +111,43 @@ const removeLike = (id) => (dispatch) => {
     );
 };
 
+// Add comment
+const addComment = (postId, commentData) => (dispatch) => {
+  dispatch(clearErrors());
+  axios
+    .post(`/api/posts/comment/${postId}`, commentData)
+    .then((res) =>
+      dispatch({
+        type: GET_POST,
+        payload: res.data,
+      })
+    )
+    .catch((err) =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      })
+    );
+};
+
+//  Delete comment
+const deleteComment = (postId, comntId) => (dispatch) => {
+  axios
+    .delete(`/api/posts/comment/${postId}/${comntId}`)
+    .then((res) =>
+      dispatch({
+        type: GET_POST,
+        payload: res.data,
+      })
+    )
+    .catch((err) =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      })
+    );
+};
+
 // Set loading state
 const setPostLoading = () => {
   return {
@@ -96,4 +155,22 @@ const setPostLoading = () => {
   };
 };
 
-export { addPost, getPosts, addLike, removeLike, deletePost, setPostLoading };
+// Clear errors
+const clearErrors = () => {
+  return {
+    type: CLEAR_ERRORS,
+  };
+};
+
+export {
+  addPost,
+  getPosts,
+  getPost,
+  addLike,
+  removeLike,
+  deletePost,
+  addComment,
+  deleteComment,
+  setPostLoading,
+  clearErrors,
+};

@@ -1,10 +1,12 @@
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import setAuthToken from '../utils/setAuthToken';
+import { clearErrors } from './postActions';
 import { GET_ERRORS, SET_CURRENT_USER } from './types';
 
 // Register user
 const registerUser = (userData, history) => (dispatch) => {
+  dispatch(clearErrors());
   axios
     .post('/api/users/register', userData)
     .then(() => history.push('/login'))
@@ -18,6 +20,7 @@ const registerUser = (userData, history) => (dispatch) => {
 
 // Login - Get user token
 const loginUser = (userData) => (dispatch) => {
+  dispatch(clearErrors());
   axios
     .post('/api/users/login', userData)
     .then((res) => {
