@@ -34,9 +34,8 @@ app.use('/api/users', users);
 app.use('/api/profile', profile);
 app.use('/api/posts', posts);
 
-// Set static folder
+// Set static folder for production use
 app.use(express.static('client/build'));
-
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
 });
