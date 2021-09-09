@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { logoutUser } from '../../actions/authActions';
 import { clearCurrentProfile } from '../../actions/profileActions';
 
-const Navbar = ({ auth, logoutUser, clearCurrentProfile }) => {
+const Navbar = ({ auth, profile, logoutUser, clearCurrentProfile }) => {
   const handleLogout = (e) => {
     e.preventDefault();
     // Redux action
@@ -17,8 +17,13 @@ const Navbar = ({ auth, logoutUser, clearCurrentProfile }) => {
   const authLinks = (
     <ul className='navbar-nav ms-auto'>
       <li className='nav-item me-2'>
+        <Link className='nav-link' to='/feed'>
+          Fost Feed
+        </Link>
+      </li>
+      <li className='nav-item me-2'>
         <Link className='nav-link' to='/dashboard'>
-         Dashboard
+          Dashboard
         </Link>
       </li>
       <li className='nav-item d-flex align-items-center'>
@@ -30,6 +35,8 @@ const Navbar = ({ auth, logoutUser, clearCurrentProfile }) => {
           style={{ width: '25px', height: '25px', marginRight: '5px' }}
         />
         <span className='text-white-50 me-2'>{auth.user.name}</span>
+      </li>
+      <li className='nav-item'>
         <span
           onClick={handleLogout}
           className='nav-link'
@@ -94,6 +101,7 @@ Navbar.propTypes = {
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
+  profile: state.profile,
 });
 
 export default connect(mapStateToProps, { logoutUser, clearCurrentProfile })(
