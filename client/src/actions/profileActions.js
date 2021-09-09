@@ -1,5 +1,6 @@
 import axios from 'axios';
 import setAuthToken from '../utils/setAuthToken';
+import { clearErrors } from './postActions';
 import {
   CLEAR_CURRENT_PROFILE,
   GET_ERRORS,
@@ -8,6 +9,20 @@ import {
   PROFILE_LOADING,
   SET_CURRENT_USER,
 } from './types';
+
+// Create profile
+const createProfile = (profileData, history) => (dispatch) => {
+  dispatch(clearErrors());
+  axios
+    .post('/api/profile', profileData)
+    .then((res) => history.push('/dashboard'))
+    .catch((err) =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      })
+    );
+};
 
 // Get current profile
 const getCurrentProfile = () => (dispatch) => {
@@ -28,21 +43,9 @@ const getCurrentProfile = () => (dispatch) => {
     );
 };
 
-// Create profile
-const createProfile = (profileData, history) => (dispatch) => {
-  axios
-    .post('/api/profile', profileData)
-    .then((res) => history.push('/dashboard'))
-    .catch((err) =>
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data,
-      })
-    );
-};
-
 // Add experience
 const addExperience = (experienceData, history) => (dispatch) => {
+  dispatch(clearErrors());
   axios
     .post('/api/profile/experience', experienceData)
     .then((res) => history.push('/dashboard'))
@@ -64,6 +67,7 @@ const deleteExperience = (id) => (dispatch) => {
 
 // Add ecucation
 const addEducation = (educationData, history) => (dispatch) => {
+  dispatch(clearErrors());
   axios
     .post('/api/profile/education', educationData)
     .then((res) => history.push('/dashboard'))
